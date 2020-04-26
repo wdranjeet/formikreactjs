@@ -2,7 +2,7 @@ This project was bootstrapped with [Create React App](https://github.com/wdranje
 
 ## Available Scripts
 
-In the project directory, you can run:
+In the project directory, you can run to install:
 
 ### `npm install`
 
