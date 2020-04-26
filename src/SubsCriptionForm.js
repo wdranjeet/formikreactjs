@@ -1,22 +1,6 @@
 import React from "react";
 import { useFormik } from "formik";
-
-
-const validate = values => {
-  const errors = {};
-  if (!values.name) {
-    errors.name = "Required";
-  } else if (values.name.length > 20) {
-    errors.name = "Name should be less than 15 charactors";
-  }
-
-  if (!values.email) {
-    errors.email = "Required";
-  } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-    errors.email = "Enter a Valid Email";
-  }
-  return errors;
-};
+import * as Yup from 'yup';
 
 const SubsCriptionForm = () => {
   const formik = useFormik({
@@ -24,10 +8,17 @@ const SubsCriptionForm = () => {
       name: "",
       email: ""
     },
-    validate,
+    validationSchema: Yup.object({
+      name: Yup.string()
+            .required('Required')
+            .max(15, 'Name should be not be greater than 15 characters'),
+
+      email: Yup.string()
+            .required("Required")
+            .email('Invalid Email Address'),
+    }),
     onSubmit: values => {
-      console.log(values.name);
-      console.log(values.email);
+      console.log(JSON.stringify(values))
     }
   });
 
@@ -37,7 +28,7 @@ const SubsCriptionForm = () => {
         <h2 className="App-header">Subscriptoin Form</h2>
 
         <div>
-          <label htmlFor="name">Name</label>
+          <label htmlFor="name">Name: </label>
           <input
             id="name"
             type="text"
@@ -46,12 +37,13 @@ const SubsCriptionForm = () => {
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
           />
-          {formik.touched.name && formik.errors.name ? 
-          <div>{formik.errors.name}</div> : null}
+          {formik.touched.name && formik.errors.name ? (
+            <div>{formik.errors.name}</div>
+          ) : null}
         </div>
-        <br/>
+        <br />
         <div>
-          <label htmlFor="email">Email</label>
+          <label htmlFor="email">Email: </label>
           <input
             id="email"
             type="text"
@@ -61,9 +53,11 @@ const SubsCriptionForm = () => {
             onBlur={formik.handleBlur}
           />
         </div>
-        {formik.touched.email && formik.errors.email ? 
-          <div>{formik.errors.email}</div> : null}
-        <br/>
+        {formik.touched.email && formik.errors.email ? (
+          <div>{formik.errors.email}</div>
+        ) : null}
+        <br />
+        {formik.values.name && formik.values.email ? (<div>{ JSON.stringify(formik.values)}</div>) : null}
         <button type="submit">Submit</button>
       </div>
     </form>
